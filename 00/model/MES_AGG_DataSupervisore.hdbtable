@@ -1,0 +1,29 @@
+table.schemaName = "MES_LIGHT";
+table.tableType = COLUMNSTORE; 
+table.description = "AGG Data Supervisore";
+table.columns = [
+	{name = "ID" ; sqlType = INTEGER; nullable = false; comment = "ID";},
+	{name = "SourceID" ; sqlType = NVARCHAR; length = 20; nullable = true; comment = "SourceID";},
+	{name = "MessageID" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "MessageID";},
+	{name = "OHID" ; sqlType = INTEGER; nullable = true; comment = "OHID";},
+	{name = "OOID" ; sqlType = INTEGER; nullable = true; comment = "OOID";},
+	{name = "STID" ; sqlType = INTEGER; nullable = true; comment = "STID";},
+	{name = "diPzPallet" ; sqlType = INTEGER; nullable = true; comment = "diPzPallet";},
+	{name = "diScartiTrancia" ; sqlType = INTEGER; nullable = true; comment = "diScartiTrancia";},
+	{name = "bQC1Richiesto" ; sqlType = INTEGER; nullable = true; comment = "bQC1Richiesto";},
+	{name = "bCambioPallet" ; sqlType = INTEGER; nullable = true; comment = "bCambioPallet";},
+	{name = "diContPz" ; sqlType = INTEGER; nullable = true; comment = "diContPz";},
+	{name = "diRichiesteQC1" ; sqlType = INTEGER; nullable = true; comment = "diRichiesteQC1";},
+	{name = "bScartoTrancia" ; sqlType = INTEGER; nullable = true; comment = "bScartoTrancia";},
+	{name = "bAnomaliaR1" ; sqlType = INTEGER; nullable = true; comment = "bAnomaliaR1";},
+	{name = "bAnomaliaTrancia" ; sqlType = INTEGER; nullable = true; comment = "bAnomaliaTrancia";},
+	{name = "bQC2Richiesto" ; sqlType = INTEGER; nullable = true; comment = "bQC2Richiesto";},
+	{name = "bAnomaliaR2" ; sqlType = INTEGER; nullable = true; comment = "bAnomaliaR2";},
+	{name = "diPalletProdotti" ; sqlType = INTEGER; nullable = true; comment = "diPalletProdotti";},
+	{name = "diRichiesteQC2" ; sqlType = INTEGER; nullable = true; comment = "diRichiesteQC2";},
+	{name = "bAnomaliaForno" ; sqlType = INTEGER; nullable = true; comment = "bAnomaliaForno";},
+	{name = "Timestamp" ; sqlType = TIMESTAMP; nullable = false; comment = "Timestamp";},
+	{name = "TimestampMessage" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampMessage";},
+	{name = "TimestampCreation" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";}
+];
+table.primaryKey.pkcolumns = ["ID"];

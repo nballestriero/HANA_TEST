@@ -1,0 +1,10 @@
+import = [ 
+	{ 
+		table = "00.model::MES_REG_EventClassification"; 
+		schema = "MES_LIGHT"; 
+		file = "00.CSV:REG_EventClassification.csv"; 
+		header = true; 
+		delimField = "|"; 
+ 
+	}
+];

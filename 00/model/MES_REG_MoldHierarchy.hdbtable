@@ -1,0 +1,12 @@
+table.schemaName = "MES_LIGHT";
+table.tableType = COLUMNSTORE; 
+table.description = "PRD Mold Hierarchy";
+table.columns = [
+	{name = "ID" ; sqlType = VARCHAR; length = 50; nullable = false; comment = "ID";},
+	{name = "Nome" ; sqlType = NVARCHAR; length = 50; nullable = true; comment = "Nome";},
+	{name = "Impronta" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "Impronta";},
+	{name = "Cavita" ; sqlType = INTEGER; nullable = true; comment = "Cavita";},	
+	{name = "TimestampCreation" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";},
+	{name = "TimestampUpdate" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";}
+];
+table.primaryKey.pkcolumns = ["ID"];

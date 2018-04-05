@@ -1,0 +1,10 @@
+import = [ 
+	{ 
+		table = "00.model::MES_OrderOperation"; 
+		schema = "MES_LIGHT"; 
+		file = "00.CSV:OrderOperation.csv"; 
+		header = true; 
+		delimField = "|"; 
+ 
+	}
+];

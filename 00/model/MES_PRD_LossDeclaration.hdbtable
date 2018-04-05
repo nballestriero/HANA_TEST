@@ -1,0 +1,16 @@
+table.schemaName = "MES_LIGHT";
+table.tableType = COLUMNSTORE; 
+table.description = "PRD Loss Declaration";
+table.columns = [
+	{name = "ID" ; sqlType = INTEGER; nullable = false; comment = "ID";},
+	{name = "OHID" ; sqlType = INTEGER; nullable = true; comment = "OHID";},
+	{name = "OOID" ; sqlType = INTEGER; nullable = true; comment = "OOID";},
+	{name = "STID" ; sqlType = INTEGER; nullable = true; comment = "STID";},
+	{name = "EventID" ; sqlType = INTEGER; nullable = true; comment = "EventID";},
+	{name = "GeneratedFrom" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "GeneratedFrom";},
+	{name = "LossID" ; sqlType = NVARCHAR; length = 50; nullable = true; comment = "LossID";},
+	{name = "Description" ; sqlType = VARCHAR; length = 250; nullable = true; comment = "Description";},
+	{name = "UserID" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "UserID";},
+	{name = "TimestampCreation" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";}
+];
+table.primaryKey.pkcolumns = ["ID"];

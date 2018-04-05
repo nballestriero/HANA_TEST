@@ -1,0 +1,23 @@
+table.schemaName = "MES_LIGHT";
+table.tableType = COLUMNSTORE; 
+table.description = "Header Degli Ordini";
+table.columns = [
+	{name = "ID"; sqlType = INTEGER; nullable = false; comment = "ID";},
+	{name = "SourceID"; sqlType = INTEGER; nullable = true; comment = "SourceID";},
+	{name = "Plant"; sqlType = NVARCHAR; length = 4; nullable = true; comment = "Plant";},
+	{name = "OrderNumber"; sqlType = NVARCHAR; length = 12; nullable = true; comment = "OrderNumber";},
+	{name = "GroupKey"; sqlType = NVARCHAR; length = 10; nullable = true; comment = "GroupKey";},
+	{name = "GroupCounter"; sqlType = NVARCHAR; length = 2; nullable = true; comment = "GroupCounter";},
+	{name = "OrderType"; sqlType = NVARCHAR; length = 4; nullable = true; comment = "OrderType";},
+	{name = "OrderStatus"; sqlType = NVARCHAR; length = 5; nullable = true; comment = "OrderStatus";},
+	{name = "OrderUom"; sqlType = VARCHAR; length = 3; nullable = true; comment = "OrderUom";},
+	{name = "TotalOrderQuantity"; sqlType = FLOAT; nullable = true; comment = "TotalOrderQuantity";},
+	{name = "MaterialNumber"; sqlType = NVARCHAR; length = 18; nullable = true; comment = "MaterialNumber";},
+	{name = "AlternativeBOM"; sqlType = NVARCHAR; length = 2; nullable = true; comment = "AlternativeBOM";},
+	{name = "ScheduledStartDate" ; sqlType = TIMESTAMP; nullable = true; comment = "ScheduledStartDate";},
+	{name = "ScheduledEndDate" ; sqlType = TIMESTAMP; nullable = true; comment = "ScheduledEndDate";},
+	{name = "TimestampCreation" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";},
+	{name = "TimestampUpdate" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampUpdate";}
+];
+table.primaryKey.pkcolumns = ["ID"];
+	
