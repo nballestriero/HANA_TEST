@@ -1,0 +1,31 @@
+table.schemaName = "MES_LIGHT";
+table.tableType = COLUMNSTORE; 
+table.description = "Operazioni Ordini";
+table.columns = [
+	{name = "ID" ; sqlType = INTEGER; nullable = false; comment = "ID";},
+	{name = "SourceID" ; sqlType = INTEGER; nullable = false; comment = "SourceID";},
+	{name = "OrderID" ; sqlType = INTEGER; nullable = false; comment = "OrderID";},
+	{name = "OperationNumber" ; sqlType = NVARCHAR; length = 4; nullable = true; comment = "OperationNumber";},
+	{name = "Sequence" ; sqlType = NVARCHAR; length = 6; nullable = true; comment = "Sequence";},
+	{name = "Status" ; sqlType = NVARCHAR; length = 20; nullable = true; comment = "Status";},
+	{name = "SAPStatus" ; sqlType = NVARCHAR; length = 20; nullable = true; comment = "SAPStatus";},
+	{name = "DurationUom" ; sqlType = VARCHAR; length = 3; nullable = true; comment = "DurationUom";},
+	{name = "Duration" ; sqlType = FLOAT; nullable = true; comment = "Duration";},
+	{name = "WorkCenter" ; sqlType = NVARCHAR; length = 20; nullable = true; comment = "WorkCenter";},
+	{name = "Description" ; sqlType = NVARCHAR; length = 40; nullable = true; comment = "Description";},
+	{name = "SetupTime" ; sqlType = FLOAT; nullable = true; comment = "SetupTime";},
+	{name = "SetupTimeUom" ; sqlType = VARCHAR; length = 3; nullable = true; comment = "SetupTimeUom";},
+	{name = "MachineTime" ; sqlType = FLOAT; nullable = true; comment = "MachineTime";},
+	{name = "MachineTimeUom" ; sqlType = VARCHAR; length = 3; nullable = true; comment = "MachineTimeUom";},
+	{name = "LabourTime" ; sqlType = FLOAT; nullable = true; comment = "LabourTime";},
+	{name = "LabourTimeUom" ; sqlType = VARCHAR; length = 3; nullable = true; comment = "LabourTimeUom";},
+	{name = "ProductionRate" ; sqlType = FLOAT; nullable = true; comment = "ProductionRate";},
+	{name = "ProductionRateUom" ; sqlType = VARCHAR; length = 3; nullable = true; comment = "ProductionRateUom";},
+	{name = "ScheduledStartDate" ; sqlType = TIMESTAMP; nullable = true; comment = "ScheduledStartDate";},
+	{name = "ScheduledEndDate" ; sqlType = TIMESTAMP; nullable = true; comment = "ScheduledEndDate";},
+	{name = "Priority" ; sqlType = INTEGER; nullable = true; comment = "Priority";},
+	{name = "TimestampCreation" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";},
+	{name = "TimestampUpdate" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampUpdate";}
+];
+table.primaryKey.pkcolumns = ["ID"];
+

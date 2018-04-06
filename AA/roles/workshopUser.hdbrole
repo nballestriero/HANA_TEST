@@ -1,0 +1,5 @@
+role 00.roles::workshopUser {
+	catalog schema "MES_LIGHT":	 SELECT;
+	application privilege: project.00::Basic;
+
+}

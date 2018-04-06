@@ -1,0 +1,17 @@
+table.schemaName = "MES_LIGHT";
+table.tableType = COLUMNSTORE; 
+table.description = "Configurazione Pressa2";
+table.columns = [
+	{name = "ID" ; sqlType = INTEGER; nullable = false; comment = "ID";},
+	{name = "SourceID" ; sqlType = NVARCHAR; length = 20; nullable = true; comment = "SourceID";},
+	{name = "MessageID" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "MessageID";},
+	{name = "Tag" ; sqlType = VARCHAR; length = 100; nullable = true; comment = "Tag";},
+	{name = "Value" ; sqlType = VARCHAR; length = 100; nullable = true; comment = "Value";},
+	{name = "Type" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "Type";},
+	{name = "Quality" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "Type";},
+	{name = "Timestamp" ; sqlType = TIMESTAMP; nullable = false; comment = "Timestamp";},
+	{name = "TimestampMessage" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampMessage";},
+	{name = "TimestampCreation" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";}
+];
+table.primaryKey.pkcolumns = ["ID"];
+	

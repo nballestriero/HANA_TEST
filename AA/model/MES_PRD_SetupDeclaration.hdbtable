@@ -1,0 +1,13 @@
+table.schemaName = "MES_LIGHT";
+table.tableType = COLUMNSTORE; 
+table.description = "PRD Setup Declaration";
+table.columns = [
+	{name = "ID" ; sqlType = INTEGER; nullable = false; comment = "ID";},
+	{name = "OHID" ; sqlType = INTEGER; nullable = true; comment = "OHID";},
+	{name = "OOID" ; sqlType = INTEGER; nullable = true; comment = "OOID";},
+	{name = "MachineID" ; sqlType = VARCHAR; length = 20; nullable = true; comment = "MessageID";},
+	{name = "MoldID" ; sqlType = VARCHAR; length = 30; nullable = true; comment = "MoldID";},
+	{name = "UserID" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "UserID";},
+	{name = "TimestampCreation" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";}
+];
+table.primaryKey.pkcolumns = ["ID"];

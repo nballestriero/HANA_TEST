@@ -1,0 +1,15 @@
+table.schemaName = "MES_LIGHT";
+table.tableType = COLUMNSTORE; 
+table.description = "Tabella Calendario";
+table.columns = [
+	{name = "ID"; sqlType = INTEGER; nullable = false; comment = "ID";},
+	{name = "Plant"; sqlType = VARCHAR; length = 20; nullable = true; comment = "Plant";},
+	{name = "AreaID"; sqlType = VARCHAR; length = 50; nullable = true; comment = "AreaID";},
+	{name = "MachineID"; sqlType = VARCHAR; length = 50; nullable = true; comment = "MachineID";},
+	{name = "StartDate"; sqlType = TIMESTAMP; nullable = true; comment = "StartDate";},
+	{name = "Duration"; sqlType = INTEGER; nullable = true; comment = "Duration";},
+	{name = "Type"; sqlType = VARCHAR; length = 20; nullable = true; comment = "Type";},
+	{name = "TimestampCreation" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";}
+];
+table.primaryKey.pkcolumns = ["ID"];
+	

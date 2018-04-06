@@ -1,0 +1,14 @@
+table.schemaName = "MES_LIGHT";
+table.tableType = COLUMNSTORE; 
+table.description = "PRD Setup Declaration";
+table.columns = [
+	{name = "ID" ; sqlType = INTEGER; nullable = false; comment = "ID";},
+	{name = "GeneratedFrom" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "GeneratedFrom";},
+	{name = "GeneratedBy" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "GeneratedBy";},
+	{name = "EventValue" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "EventValue";},
+	{name = "Description" ; sqlType = NVARCHAR; length = 100; nullable = true; comment = "Description";},
+	{name = "EventType" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "EventType";},
+	{name = "TimestampCreation" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";},
+	{name = "TimestampUpdate" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";}
+];
+table.primaryKey.pkcolumns = ["ID"];

@@ -1,0 +1,13 @@
+table.schemaName = "MES_LIGHT";
+table.tableType = COLUMNSTORE; 
+table.description = "PRD Loss Hierarchy";
+table.columns = [
+	{name = "ID" ; sqlType = INTEGER; nullable = false; comment = "ID";},
+	{name = "NodeID" ; sqlType = NVARCHAR; length = 50; nullable = true; comment = "NodeID";},
+	{name = "Description" ; sqlType = NVARCHAR; length = 100; nullable = true; comment = "Description";},
+	{name = "Type" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "Type";},
+	{name = "ParentID" ; sqlType = INTEGER; nullable = true; comment = "ParentID";},	
+	{name = "TimestampCreation" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";},
+	{name = "TimestampUpdate" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";}
+];
+table.primaryKey.pkcolumns = ["ID"];
