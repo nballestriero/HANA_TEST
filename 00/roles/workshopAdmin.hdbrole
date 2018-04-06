@@ -1,7 +1,0 @@
-role 00.roles::workshopAdmin
-extends role 00.roles::workshopUser
-{
-	catalog schema "MES_LIGHT":	 INSERT,UPDATE,DELETE,DROP;
-	application privilege: 00::Admin;
-
-}
