@@ -1,8 +1,8 @@
 import = [ 
 	{ 
-		table = "00.model::MES_Clendar"; 
+		table = "AA.model::MES_Clendar"; 
 		schema = "MES_LIGHT"; 
-		file = "00.CSV:Clendar.csv"; 
+		file = "AA.CSV:Clendar.csv"; 
 		header = true; 
 		delimField = "|"; 
  

@@ -1,8 +1,8 @@
 import = [ 
 	{ 
-		table = "00.model::MES_AGG_DataSupervisore"; 
+		table = "AA.model::MES_AGG_DataSupervisore"; 
 		schema = "MES_LIGHT"; 
-		file = "00.CSV:AGG_DataSupervisore.csv"; 
+		file = "AA.CSV:AGG_DataSupervisore.csv"; 
 		header = true; 
 		delimField = "|"; 
  

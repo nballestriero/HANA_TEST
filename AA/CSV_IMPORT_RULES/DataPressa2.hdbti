@@ -1,8 +1,8 @@
 import = [ 
 	{ 
-		table = "00.model::MAC_DataPressa2"; 
+		table = "AA.model::MAC_DataPressa2"; 
 		schema = "MES_LIGHT"; 
-		file = "00.CSV:DataPressa2.csv"; 
+		file = "AA.CSV:DataPressa2.csv"; 
 		header = true; 
 		delimField = "|"; 
  

@@ -1,8 +1,8 @@
 import = [ 
 	{ 
-		table = "00.model::MES_PRD_Event"; 
+		table = "AA.model::MES_PRD_Event"; 
 		schema = "MES_LIGHT"; 
-		file = "00.CSV:PRD_Event.csv"; 
+		file = "AA.CSV:PRD_Event.csv"; 
 		header = true; 
 		delimField = "|"; 
  

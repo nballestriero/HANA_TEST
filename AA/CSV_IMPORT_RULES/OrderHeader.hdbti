@@ -1,8 +1,8 @@
 import = [ 
 	{ 
-		table = "00.model::MES_OrderHeader"; 
+		table = "AA.model::MES_OrderHeader"; 
 		schema = "MES_LIGHT"; 
-		file = "00.CSV:OrderHeader.csv"; 
+		file = "AA.CSV:OrderHeader.csv"; 
 		header = true; 
 		delimField = "|"; 
  

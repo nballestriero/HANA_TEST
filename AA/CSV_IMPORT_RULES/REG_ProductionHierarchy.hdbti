@@ -1,8 +1,8 @@
 import = [ 
 	{ 
-		table = "00.model::MES_REG_ProductionHierarchy"; 
+		table = "AA.model::MES_REG_ProductionHierarchy"; 
 		schema = "MES_LIGHT"; 
-		file = "00.CSV:REG_ProductionHierarchy.csv"; 
+		file = "AA.CSV:REG_ProductionHierarchy.csv"; 
 		header = true; 
 		delimField = "|"; 
  

@@ -1,5 +1,5 @@
-role 00.roles::workshopUser {
+role AA.roles::workshopUser {
 	catalog schema "MES_LIGHT":	 SELECT;
-	application privilege: project.00::Basic;
+	application privilege: project.AA::Basic;
 
 }
