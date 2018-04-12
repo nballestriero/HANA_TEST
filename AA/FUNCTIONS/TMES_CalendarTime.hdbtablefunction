@@ -1,0 +1,108 @@
+FUNCTION MES_LIGHT."HANA_TEST.AA.FUNCTIONS::TMES_CalendarTime" (StartDate datetime, EndDate datetime) 
+	RETURNS TABLE ("Plant" VARCHAR(20), 
+				   "AreaID" VARCHAR(50),
+				   "MachineID" VARCHAR(50),
+				   "Type" VARCHAR(20),
+				   "Duration" INTEGER
+				)
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+/***************************** 
+	Write your function logic
+ *****************************/
+/****************************** MY VERSION **********************************************
+RETURN SELECT "Plant", "AreaID", "MachineID", "Type",(SUM("Duration")*60) as "Duration"
+	from "MES_LIGHT"."HANA_TEST.AA.model::MES_Clendar"
+	where "StartDate" between :StartDate and :EndDate
+	group by "Plant", "AreaID", "MachineID", "Type";
+*/
+RETURN
+SELECT "Plant", "AreaID", "MachineID", "Type", ( SUM("Duration") * 60 ) "Duration"
+	  FROM (
+	  	SELECT "Plant", "AreaID", "MachineID", "Type", ( "Duration" - cast((SECONDS_BETWEEN("StartDate", :StartDate)/60)as INTEGER)) as "Duration"
+	  	FROM "MES_LIGHT"."HANA_TEST.AA.model::MES_Clendar"
+	 	WHERE ADD_SECONDS("StartDate", (("Duration")*60)) > :StartDate
+	   		AND "StartDate" < :StartDate
+	  
+	   	
+	   	UNION ALL
+	   	
+	   	SELECT "Plant", "AreaID", "MachineID", "Type", SUM("Duration") "Duration"
+	  	FROM "MES_LIGHT"."HANA_TEST.AA.model::MES_Clendar"
+	 	WHERE "StartDate" >= :StartDate
+	   		AND ADD_SECONDS("StartDate", (("Duration")*60)) < :EndDate
+	 	GROUP by "Plant", "AreaID", "MachineID", "Type"
+	 	
+	 	UNION ALL
+	 	
+	 	SELECT "Plant", "AreaID", "MachineID", "Type", cast((SECONDS_BETWEEN("StartDate", :EndDate)/60)as INTEGER) as "Duration"
+	  	FROM "MES_LIGHT"."HANA_TEST.AA.model::MES_Clendar"
+	 	WHERE ADD_SECONDS("StartDate", (("Duration")*60)) > :EndDate
+	   		AND "StartDate" < :EndDate
+	   	
+	   	
+	  ) 
+	  GROUP by "Plant", "AreaID", "MachineID", "Type";
+	  
+	  
+	  
+	  
+
+END;
+
+
+/*
+DATEDIFF=
+Returns the count (signed integer) of the specified datepart 
+boundaries crossed between the specified startdate and enddate.
+
+DATEADD (datepart , number , date )  
+Returns a specified date with the specified number interval
+(signed integer) added to a specified datepart of that date.
+*/
+/*
+USE [MESLight]
+GO
+/****** Object:  UserDefinedFunction [dbo].[TMES_CalendarTime]    Script Date: 11/04/2018 15:37:53
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Marco Allegretti
+-- Create date: 2018-03-04
+-- Description:	Claculate the time duration of the events inside the calendar between a start and a an end date
+-- =============================================
+ALTER FUNCTION [dbo].[TMES_CalendarTime] ( @StartDate datetime, @EndDate datetime )
+RETURNS TABLE 
+AS
+RETURN 
+(
+	SELECT Plant, AreaID, MachineID, Type, ( SUM(Duration) * 60 ) Duration
+	  FROM (
+
+	SELECT Plant, AreaID, MachineID, Type, ( Duration - DATEDIFF(MINUTE, StartDate, @StartDate) ) Duration
+	  FROM [dbo].[MES_Clendar]
+	 WHERE DATEADD(MINUTE, Duration, StartDate) > @StartDate
+	   AND StartDate < @StartDate
+
+	 UNION ALL
+
+	SELECT Plant, AreaID, MachineID, Type, SUM(Duration) Duration
+	  FROM [dbo].[MES_Clendar]
+	 WHERE StartDate >= @StartDate
+	   AND DATEADD(MINUTE, Duration, StartDate) < @EndDate
+	 GROUP by Plant, AreaID, MachineID, Type
+
+	 UNION ALL
+
+	SELECT Plant, AreaID, MachineID, Type, DATEDIFF(MINUTE, StartDate, @EndDate)
+	  FROM [dbo].[MES_Clendar]
+	 WHERE DATEADD(MINUTE, Duration, StartDate) > @EndDate
+	   AND StartDate < @EndDate
+
+		   ) t
+	 GROUP BY Plant, AreaID, MachineID, Type
+)
+*/

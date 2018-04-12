@@ -1,5 +1,5 @@
-role AA.roles::workshopUser {
+role HANA_TEST.AA.roles::workshopUser {
 	catalog schema "MES_LIGHT":	 SELECT;
-	application privilege: AA::Basic;
+	application privilege: HANA_TETS.AA::Basic;
 
 }

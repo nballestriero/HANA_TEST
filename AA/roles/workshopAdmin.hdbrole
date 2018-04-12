@@ -1,7 +1,7 @@
-role AA.roles::workshopAdmin
-extends role AA.roles::workshopUser
+role HANA_TEST.AA.roles::workshopAdmin
+extends role HANA_TEST.AA.roles::workshopUser
 {
 	catalog schema "MES_LIGHT":	 INSERT,UPDATE,DELETE,DROP;
-	application privilege: AA::Admin;
+	application privilege: HANA_TEST.AA::Admin;
 
 }

@@ -1,8 +1,8 @@
 import = [ 
 	{ 
-		table = "AA.model::MAC_DataPressa"; 
+		table = "HANA_TEST.AA.model::MAC_DataPressa"; 
 		schema = "MES_LIGHT"; 
-		file = "AA.CSV:DataPressa.csv"; 
+		file = "HANA_TEST.AA.CSV:DataPressa.csv"; 
 		header = true; 
 		delimField = "|"; 
  
