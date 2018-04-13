@@ -1,8 +1,8 @@
 import = [ 
 	{ 
-		table = "AA.model::MES_PRD_LossDeclaration"; 
+		table = "HANA_TEST.AA.model::MES_PRD_LossDeclaration"; 
 		schema = "MES_LIGHT"; 
-		file = "AA.CSV:PRD_LossDeclaration.csv"; 
+		file = "HANA_TEST.AA.CSV:PRD_LossDeclaration.csv"; 
 		header = true; 
 		delimField = "|"; 
  

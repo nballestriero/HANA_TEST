@@ -1,0 +1,17 @@
+schema = "MES_LIGHT";
+query ="
+SELECT        MOH.ID AS OHID, MOO.ID AS OOID, MOH.\"Plant\", MOH.\"OrderNumber\", MOO.\"OperationNumber\", 
+			  MOH.\"GroupKey\", MOH.\"GroupCounter\", MOO.\"Sequence\",
+			  MOO.\"Description\" AS \"OperationDescription\", MOO.\"Status\", 
+              MOO.\"Duration\", MOO.\"DurationUom\", MOH.\"MaterialNumber\",
+              '' AS \"MaterialDescription\", MOH.\"AlternativeBOM\", MOO.\"WorkCenter\", '' AS \"WorkCenterDescription\", 
+              MOO.\"ScheduledStartDate\", MOO.\"ScheduledEndDate\", 
+              MOH.\"OrderStatus\", MOH.\"OrderType\", MOH.\"TotalOrderQuantity\", MOO.\"SetupTime\", 
+              MOO.\"SetupTimeUom\", MOO.\"MachineTime\", MOO.\"MachineTimeUom\", MOO.\"LabourTime\", 
+              MOO.\"LabourTimeUom\", MOO.\"ProductionRate\", 
+              MOO.\"ProductionRateUom\", MOH.\"ScheduledStartDate\" AS \"OrderScheduledStartDate\", 
+              MOH.\"ScheduledEndDate\" AS \"OrderScheduledEndDate\"
+
+FROM          \"MES_LIGHT\".\"HANA_TEST.AA.model::MES_OrderOperation\" AS MOO INNER JOIN
+              \"MES_LIGHT\".\"HANA_TEST.AA.model::MES_OrderHeader\" AS MOH ON MOO.\"OrderID\" = MOH.ID
+";

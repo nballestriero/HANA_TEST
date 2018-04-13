@@ -1,8 +1,8 @@
 import = [ 
 	{ 
-		table = "AA.model::MES_OrderOperation"; 
+		table = "HANA_TEST.AA.model::MES_OrderOperation"; 
 		schema = "MES_LIGHT"; 
-		file = "AA.CSV:OrderOperation.csv"; 
+		file = "HANA_TEST.AA.CSV:OrderOperation.csv"; 
 		header = true; 
 		delimField = "|"; 
  

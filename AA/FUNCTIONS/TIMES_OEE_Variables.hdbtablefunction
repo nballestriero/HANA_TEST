@@ -1,0 +1,156 @@
+FUNCTION insert_schema_name."TIMES_OEE_Variables" ( ) 
+	RETURNS return_table_type
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER AS
+BEGIN
+/***************************** 
+	Write your function logic
+ *****************************/
+END;
+
+/*
+USE [MESLight]
+GO
+/****** Object:  UserDefinedFunction [dbo].[TMES_OEE_Variables]    Script Date: 13/04/2018 15:28:06 ******
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Marco Allegretti
+-- Create date: 2018-03-04
+-- Description:	Function that calculates the OEE indeces
+-- =============================================
+ALTER FUNCTION [dbo].[TMES_OEE_Variables]
+(	
+	@StartDate datetime,
+	@EndDate datetime,
+	@OOID int,
+	@OHID int,
+	@STID int
+)
+RETURNS TABLE 
+AS
+RETURN 
+(
+	
+
+select OHID, OOID, STID, MachineID
+     , ROUND( ( OEED * OEEE * OEEQ ) * 100 , 2 ) as OEE
+     , ROUND( OEED * 100 , 2 ) as OEED
+     , ROUND( OEEDS * 100 , 2 ) as OEEDS
+     , ROUND( OEEDU * 100 , 2 ) as OEEDU
+     , ROUND( OEEE * 100 , 2 ) as OEEE
+     , ROUND( OEEEL * 100 , 2 ) as OEEEL
+     , ROUND( OEEES * 100 , 2 ) as OEEES
+     , ROUND( OEEQ * 100 , 2 ) as OEEQ
+     , ROUND( OEEQS * 100 , 2 ) as OEEQS
+     , ROUND( OEEQR * 100 , 2 ) as OEEQR
+  from (
+
+select -- OHID, OOID, STID, MachineID
+*
+
+     , ( cast((TA - TF) as float) / cast(TA as float) ) as OEED -- rateo disponibilità (AVAILABILITY)
+     , ( cast((UB+US) as float) * cast(TC as float) / cast( (TA-TF) as float) ) as OEEE -- rateo efficienza(PERFORMANCE)
+     , ( cast(UB as float) / cast( (UB+US) as float ) ) as OEEQ -- rateo qualita'(QUALITY)
+
+     , ( cast(PD as float) / cast(TA as float) ) as OEEDS -- fermi pianificati (Planned Stops)
+     , ( cast(BD as float) / cast(TA as float) ) as OEEDU -- fermi non pianificati (Unplanned Stops)
+     , ( ( cast(UB as float) / ( 1 / cast( ([TO]*TA) as float) ) ) - ( cast(UB as float) / ( 1 / cast( (TC*TA) as float) ) ) ) as OEEEL -- velocita' ridotta(Slow Cicles)
+     , ( ( cast((UB+US) as float) * cast(TC as float) / cast( (TA-TF) as float) ) - ( ( cast(UB as float) / ( 1 / cast( ([TO]*TA) as float) ) ) - ( cast(UB as float) / ( 1 / cast( (TC*TA) as float) ) ) ) ) as OEEES -- microfermate (Small Stops)
+     , ( cast(SS as float) * cast(TC as float) / cast(TA as float) ) as OEEQS -- scarti avviamento (Startup Reject)
+     , ( cast(PS as float) * cast(TC as float) / cast(TA as float) ) as OEEQR -- scarti avviamento (Startup Reject)
+
+
+  from (
+
+	select T1.OHID
+		 , T1.OOID
+		 , T1.STID
+		 , T1.MachineID
+		 , DATEDIFF(SECOND, @StartDate, @EndDate) as TCal  -- Tempo Calendario
+		 , ( DATEDIFF(SECOND, @StartDate, @EndDate) - T2.Duration - T1.FCAL ) as TA  -- Tempo Apertura
+		 , ( ( DATEDIFF(SECOND, @StartDate, @EndDate) - T2.Duration - T1.FCAL ) / DATEDIFF(SECOND, @StartDate, @EndDate) ) as LD  -- Loading Time
+		 , T1.SETUP as PD  -- Attrezzaggio
+		 , T1.GUASTI as BD  -- Guasti
+		 , ( T1.SETUP + T1.GUASTI ) as TF  -- Tempo Fermo
+		 , 0 as SS  -- Scarti Avanzamento
+		 , T3.Scrap as PS  -- Scarti Produzione
+		 , T3.Scrap as US  -- Unita' scarto
+		 , T3.Quantity as UB  -- Unita' buone
+		 , ( select round( ( ( ProductionRate * 60 ) / 100), 0) p from [dbo].[VMES_OrderOperation] where OHID = @OHID and OOID = @OOID ) as TC -- Tempo Ciclo
+		 , ( select round( ( ( ProductionRate * 60 ) / 100), 0) p from [dbo].[VMES_OrderOperation] where OHID = @OHID and OOID = @OOID ) as [TO] -- Tempo Ciclo Impostato
+	  from (
+
+	-- get times
+
+	select OHID, OOID, STID, MachineID, ISNULL(FCAL,0) FCAL, ISNULL(SETUP,0) SETUP, ISNULL(GUASTI,0) GUASTI
+	  from (
+
+	select OHID, OOID, STID, MachineID, 'FCAL' as LossType, sum(Duration) Duration
+	  from [dbo].[VMES_OEE_LossTime]
+	 where LossType in ('MANPREV','FRMORG')
+	   and OHID = @OHID and OOID = @OOID and STID = @STID
+	 group by OHID, OOID, STID, MachineID
+
+	 union all
+
+	select OHID, OOID, STID, MachineID, LossType, sum(Duration) Duration
+	  from [dbo].[VMES_OEE_LossTime]
+	 where LossType in ('SETUP')
+	   and OHID = @OHID and OOID = @OOID and STID = @STID
+	 group by OHID, OOID, STID, MachineID, LossType
+
+	 union all
+
+	select OHID, OOID, STID, MachineID, LossType, sum(Duration) Duration
+	  from [dbo].[VMES_OEE_LossTime]
+	 where LossType in ('GUASTI')
+	   and OHID = @OHID and OOID = @OOID and STID = @STID
+	 group by OHID, OOID, STID, MachineID, LossType
+
+		   ) t
+	 pivot ( sum(Duration) for LossType in ([FCAL],[SETUP],[GUASTI]) ) b
+
+		   ) T1
+
+	  join [dbo].[TMES_CalendarTime](@StartDate,@EndDate) T2
+		on T1.MachineID = T2.MachineID
+
+	  join (
+
+	select t1.OHID, t1.OOID, t1.STID, t1.SourceID as MachineID
+		 , isnull(t3.Quantity,0) Quantity
+		 , ( ( (t2.diScartiTrancia - t1.diScartiTrancia) * t4.Cavity ) + isnull(t3.Scrap,0) ) Scrap
+	  from ( select top 1 * from [dbo].[MES_AGG_DataSupervisore] where OHID = @OHID and OOID = @OOID and STID = @STID and Timestamp >= @StartDate order by Timestamp asc ) t1
+	  join ( select top 1 * from [dbo].[MES_AGG_DataSupervisore] where OHID = @OHID and OOID = @OOID and STID = @STID and Timestamp <= @EndDate order by Timestamp desc ) t2
+		on t1.OHID = t2.OHID
+	   and t1.OOID = t2.OOID
+	   and t1.STID = t2.STID
+	  join ( select PSD.ID as STID, PSD.OHID, PSD.OOID, RMH.Cavita as Cavity from [dbo].[MES_PRD_SetupDeclaration] PSD join [dbo].[MES_REG_MoldHierarchy] RMH on PSD.MoldID = RMH.ID ) t4
+	    on t1.OHID = t4.OHID
+	   and t1.OOID = t4.OOID
+	   and t1.STID = t4.STID
+	  left join (
+	select OHID, OOID, STID, ( SUM(Quantity) - SUM(Scrap) ) Quantity, SUM(Scrap) Scrap
+	  from [dbo].[MES_PRD_ProductionDeclaration]
+	 where TimestampCreation >= @StartDate
+	   and TimestampCreation <= @EndDate
+	   and OHID = @OHID and OOID = @OOID and STID = @STID
+	 group by OHID, OOID, STID
+		   ) t3
+		on t1.OHID = t3.OHID
+	   and t1.OOID = t3.OOID
+	   and t1.STID = t3.STID
+
+		   ) T3
+		on T1.MachineID = T3.MachineID
+
+       ) t
+
+       ) te
+
+
+	
+)

@@ -1,7 +1,7 @@
 ID|OHID|OOID|STID|EventID|GeneratedFrom|LossID|Description|UserID|TimestampCreation
 1|286|1|2|12|MES_PRD_ProductionDeclaration|S03|Test messaggio scarto|test|2018-03-04 13:10:56.577000000
 2|286|1|2|14|MES_PRD_ProductionDeclaration|S01||Luisa|2018-03-04 17:19:03.667000000
-3|286|1|2|15|MES_PRD_ProductionDeclaration|S06|Errori dimensionali chissà cos'è|Luisa|2018-03-04 17:22:50.650000000
+3|286|1|2|15|MES_PRD_ProductionDeclaration|S06|Errori dimensionali chissa' cos'e'|Luisa|2018-03-04 17:22:50.650000000
 5|286|1|2|324|MES_PRD_Event|F0812|Rabbocco olio di marca|Lu|2018-03-04 17:34:00.100000000
 8|287|4|20|325|MES_PRD_Event|F0908|||2018-03-04 17:53:18.530000000
 9|287|4|21|312|MES_PRD_Event|F0904||Luisa|2018-03-04 18:06:08.920000000

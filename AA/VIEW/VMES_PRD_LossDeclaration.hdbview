@@ -1,0 +1,8 @@
+schema = "MES_LIGHT";
+query =
+	"
+	SELECT       PLD.\"ID\", PLD.\"OHID\", PLD.\"OOID\", PLD.\"STID\", PLD.\"EventID\", PLD.\"GeneratedFrom\", PLD.\"LossID\", PLD.\"Description\", PLD.\"UserID\", PLD.\"TimestampCreation\", RLH.\"Description\" AS \"LossDescription\", RLHp.\"NodeID\"
+	FROM          \"MES_LIGHT\".\"HANA_TEST.AA.model::MES_PRD_LossDeclaration\" AS PLD INNER JOIN
+              	  \"MES_LIGHT\".\"HANA_TEST.AA.model::MES_REG_LossHierarchy\" AS RLH ON PLD.\"LossID\" = RLH.\"NodeID\" INNER JOIN
+              	  \"MES_LIGHT\".\"HANA_TEST.AA.model::MES_REG_LossHierarchy\" AS RLHp ON RLHp.ID = RLH.\"ParentID\"
+    ";

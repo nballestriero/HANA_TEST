@@ -1,0 +1,9 @@
+schema = "MES_LIGHT";
+query =
+"	SELECT MPE.OHID, MPE.OOID, MPE.STID, MPE.\"SourceID\" AS \"MachineID\", PLD.\"NodeID\" AS \"LossType\", SUM(MPE.\"Duration\") AS \"Duration\"
+	FROM  (SELECT        ID, OHID, OOID, STID, \"EventID\", \"GeneratedFrom\", \"LossID\", \"Description\", \"UserID\", \"TimestampCreation\", \"LossDescription\", \"NodeID\"
+       FROM            \"MES_LIGHT\".\"HANA_TEST.AA.VIEW::VMES_PRD_LossDeclaration\"
+       WHERE        (\"GeneratedFrom\" = 'MES_PRD_Event')) AS PLD INNER JOIN
+       \"MES_LIGHT\".\"HANA_TEST.AA.model::MES_PRD_Event\" AS MPE ON PLD.\"EventID\" = MPE.ID
+GROUP BY MPE.OHID, MPE.OOID, MPE.STID, MPE.\"SourceID\", PLD.\"NodeID\"
+";

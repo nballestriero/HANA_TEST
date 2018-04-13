@@ -1,8 +1,8 @@
 import = [ 
 	{ 
-		table = "AA.model::MES_REG_LossHierarchy"; 
+		table = "HANA_TEST.AA.model::MES_REG_LossHierarchy"; 
 		schema = "MES_LIGHT"; 
-		file = "AA.CSV:REG_LossHierarchy.csv"; 
+		file = "HANA_TEST.AA.CSV:REG_LossHierarchy.csv"; 
 		header = true; 
 		delimField = "|"; 
  
