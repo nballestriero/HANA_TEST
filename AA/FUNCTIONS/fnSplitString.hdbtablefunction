@@ -6,7 +6,8 @@ FUNCTION MES_LIGHT."HANA_TEST.AA.FUNCTIONS::fnSplitString" (iv_split_string Varc
 	SQL SECURITY INVOKER AS
 BEGIN
 /***************************** 
-	Write your function logic
+	this function takes a string and a char, the char is used to divide the string in substrings.
+	Each substring create a row in the output table.
  *****************************/
     DECLARE TEMP_STR VARCHAR(5000) := :iv_split_string || :delimiter;
     DECLARE OUT_VAR VARCHAR(5000) ARRAY;
@@ -25,41 +26,6 @@ BEGIN
     return_table = UNNEST(:OUT_VAR) as ("splitdata");
     
 	RETURN SELECT * FROM :return_table;
-
-	/*RETURN UNNEST(:OUT_VAR);*/
     
 END;
 
-
-/*
-USE [MESLight]
-GO
-	 Object:  UserDefinedFunction [dbo].[fnSplitString]    Script Date: 12/04/2018 15:07:49 
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
-ALTER FUNCTION [dbo].[fnSplitString] 
-( 
-    @string NVARCHAR(MAX), 
-    @delimiter CHAR(1) 
-) 
-RETURNS @output TABLE(splitdata NVARCHAR(MAX) 
-) 
-BEGIN 
-    DECLARE @start INT, @end INT 
-    SELECT @start = 1, @end = CHARINDEX(@delimiter, @string) 
-    WHILE @start < LEN(@string) + 1 BEGIN 
-        IF @end = 0  
-            SET @end = LEN(@string) + 1
-       
-        INSERT INTO @output (splitdata)  
-        VALUES(SUBSTRING(@string, @start, @end - @start)) 
-        SET @start = @end + 1 
-        SET @end = CHARINDEX(@delimiter, @string, @start)
-        
-    END 
-    RETURN 
-END
-*/
