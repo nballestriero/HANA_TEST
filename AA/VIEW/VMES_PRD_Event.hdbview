@@ -1,0 +1,23 @@
+schema = "MES_LIGHT";
+query ="
+
+SELECT MPE.ID, MPE.OHID,
+	   MPE.OOID, MPE.STID,
+	   MPE.\"SourceID\", 
+	   MPE.\"EventValue\", 
+	   MPE.\"Duration\", 
+	   MPE.\"GeneratedFrom\", 
+	   MPE.\"GeneratedBy\", 
+	   MPE.\"ReferenceID\", 
+	   MPE.\"TimestampEvent\",
+	   MPE.\"TimestampCreation\", 
+       REC.\"Description\" AS \"EventDescription\", 
+       REC.\"EventType\"
+FROM   \"MES_LIGHT\".\"HANA_TEST.AA.model::MES_PRD_Event\" AS MPE
+	   INNER JOIN
+       \"MES_LIGHT\".\"HANA_TEST.AA.model::MES_REG_EventClassification\" AS REC
+       ON
+       MPE.\"EventValue\" = REC.\"EventValue\"
+       AND MPE.\"GeneratedFrom\" = REC.\"GeneratedFrom\"
+       AND MPE.\"GeneratedBy\" = REC.\"GeneratedBy\"
+";

@@ -14,7 +14,7 @@ table.columns = [
 	{name = "SAPErrorMessage" ; sqlType = NVARCHAR; length = 5000; nullable = true; comment = "SAPErrorMessage";},
 	{name = "ParentID" ; sqlType = INTEGER; nullable = true; comment = "ParentID";},	
 	{name = "UserID" ; sqlType = VARCHAR; length = 50; nullable = true; comment = "UserID";},
-	{name = "TimestampSAP" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampSAP";},
+	{name = "TimestampSAP" ; sqlType = TIMESTAMP; nullable = true; comment = "TimestampSAP";},
 	{name = "TimestampCreation" ; sqlType = TIMESTAMP; nullable = false; comment = "TimestampCreation";}
 ];
 table.primaryKey.pkcolumns = ["ID"];

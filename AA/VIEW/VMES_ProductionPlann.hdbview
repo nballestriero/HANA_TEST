@@ -1,0 +1,203 @@
+schema = "MES_LIGHT";
+query ="
+
+/* retrieve the overall status of the operation*/
+SELECT VOO.OHID, 
+	   VOO.OOID, 
+	   0 AS STID, 
+	   VOO.Plant, 
+	   VOO.OrderNumber, 
+	   VOO.OperationNumber, 
+	   VOO.OperationDescription, 
+	   VOO.MaterialNumber, 
+	   VOO.AlternativeBOM, 
+       VOO.WorkCenter, 
+       'WORKCENTER' AS WorkCenterType, 
+       '' AS MoldID, 
+       '' AS MoldDescription, 
+       0 AS MoldCavity, 
+       ((VOO.MachineTime * 60) / 100) * 0 AS TacktTime, 
+       VOO.TotalOrderQuantity, 						/*     , ISNULL(PPD.Quantity, 0) AS Quantity*/
+       (ISNULL(SCT.Quantity, 0) - ISNULL(PPD.Scrap, 0)) AS Quantity,
+       /*HINT: create a view for the detail of the single machine and call it here to aggregate those data*/
+       ISNULL(PPD.Scrap, 0) + 
+       		(ISNULL(SCT.Scrap, 0) * 4) + 
+       		(ISNULL(SCP.ScrapBad, 0) * 4) +
+            (ISNULL(SCP.ScrapPs, 0) * 4) + 
+            (ISNULL(SCP.ScrapOut, 0) * 4) AS Scrap, 
+       VOO.ScheduledStartDate AS StartDate,
+       getdate() AS EndDate,
+       /* FIXME: retrieve the date of the last event for the specific order operation*/ 
+       VOO.ScheduledStartDate, 
+       VOO.OrderScheduledStartDate,
+FROM   [dbo].[VMES_OrderOperation] AS VOO 
+	   LEFT JOIN
+       		(SELECT        OOID, SUM(Quantity - Scrap) Quantity, SUM(Scrap) Scrap
+        		FROM            [dbo].[MES_PRD_ProductionDeclaration]
+        	GROUP BY OOID) PPD 
+            ON VOO.OOID = PPD.OOID /* FIXME: Quantity calculation*/ 
+       		OUTER APPLY
+       		(SELECT t1.OHID, 
+       				t1.OOID, 
+       				((t2.diScartiTrancia - t1.diScartiTrancia) * 4) Scrap, 
+       				(t2.diPalletProdotti - t1.diPalletProdotti) * t2.diPzPallet Quantity
+        	FROM
+        		(SELECT TOP 1 *
+                 FROM [dbo].[MES_AGG_DataSupervisore]
+                 WHERE  OHID = VOO.OHID AND OOID = VOO.OOID
+                 ORDER BY Timestamp ASC) t1 
+                 JOIN
+                 	(SELECT        TOP 1 *
+                  	FROM            [dbo].[MES_AGG_DataSupervisore]
+                  	WHERE        OHID = VOO.OHID
+                  			  	 AND
+                  			   	 OOID = VOO.OOID
+                  	ORDER BY Timestamp DESC) t2 
+                  ON t1.OHID = t2.OHID
+                  AND 
+                  t1.OOID = t2.OOID
+                  ) SCT /* calculate scrap from the 'pressa'*/ 
+                  OUTER APPLY
+                  (SELECT 
+                  		t1.OHID, 
+                  		t1.OOID, 
+                  		(t2.ZR_SUMCYC_JOB_BAD_I - t1.ZR_SUMCYC_JOB_BAD_I) ScrapBad, 
+                  		(t2.ZR_PROCYC_JOB_PS_I - t1.ZR_PROCYC_JOB_PS_I) ScrapPs, 
+                        (t2.ZR_PROCYC_JOB_OUT_I - t1.ZR_PROCYC_JOB_OUT_I) ScrapOut
+                    FROM  (
+                    	SELECT TOP 1 *
+                        FROM            [dbo].[MES_AGG_DataPressa]
+                        WHERE OHID = VOO.OHID 
+                        	  AND 
+                        	  OOID = VOO.OOID
+                        ORDER BY Timestamp ASC
+                        ) t1 
+                        JOIN
+                        (SELECT TOP 1 *
+                         FROM [dbo].[MES_AGG_DataPressa]
+                         WHERE 
+                         	OHID = VOO.OHID 
+                         	AND 
+                         	OOID = VOO.OOID
+                         ORDER BY Timestamp DESC
+                         ) t2 
+                         ON t1.OHID = t2.OHID
+                         AND t1.OOID = t2.OOID
+                         AND t1.STID = t2.STID)
+                         SCP
+					UNION ALL
+/* retrieve the detailed status of the operation (for each machine on which it has been associated to)*/ 
+					SELECT 
+						VOO.OHID, 
+						VOO.OOID, 
+						PSD.ID AS STID, 
+						VOO.Plant, 
+						VOO.OrderNumber, 
+						VOO.OperationNumber, 
+                        VOO.OperationDescription, 
+                        VOO.MaterialNumber, 
+                        VOO.AlternativeBOM, 
+                        PSD.MachineID AS WorkCenter, 
+                        'MACHINE' AS WorkCenterType, 
+                        PSD.MoldID,
+                        RMH.Nome AS MoldDescription, 
+                        RMH.Cavita AS MoldCavity, 
+                        ((VOO.MachineTime * 60) / 100) * RMH.Cavita AS TacktTime, 
+                        VOO.TotalOrderQuantity, /*     , ISNULL(PPD.Quantity, 0) AS Quantity*/ 
+                        (ISNULL(SCT.Quantity, 0)- ISNULL(PPD.Scrap, 0)) AS Quantity, 
+                        ISNULL(PPD.Scrap, 0) + 
+                        	(ISNULL(SCT.Scrap, 0) * RMH.Cavita)+
+                        	(ISNULL(SCP.ScrapBad, 0) * RMH.Cavita)+ 
+                        	(ISNULL(SCP.ScrapPs, 0) * RMH.Cavita)+ 
+                        	(ISNULL(SCP.ScrapOut, 0) * RMH.Cavita) AS Scrap, 
+                         PSD.TimestampEvent AS StartDate,
+                         getdate() AS EndDate,
+                         /* FIXME: retrieve the date of the last event for the specific order operation and setup*/
+                         VOO.ScheduledStartDate,
+                         VOO.OrderScheduledStartDate
+					FROM  [dbo].[VMES_OrderOperation] AS VOO JOIN
+                    	(
+	                    	SELECT PSD.*, 
+	                    			MPE.TimestampEvent
+	                         FROM [dbo].[MES_PRD_SetupDeclaration] PSD 
+	                    	 CROSS apply
+		                         (SELECT TOP 1 *
+		                          FROM [dbo].[MES_PRD_Event]
+		                          WHERE        STID = PSD.ID
+		                          ORDER BY TimestampEvent ASC) MPE
+                         ) AS PSD 
+                         ON PSD.OOID = VOO.OOID JOIN
+                         [dbo].[MES_REG_MoldHierarchy] RMH ON PSD.MoldID = RMH.ID LEFT JOIN
+                         (
+                         	SELECT STID,
+                         		   SUM(Quantity - Scrap) Quantity, 
+                         		   SUM(Scrap) Scrap
+                            FROM [dbo].[MES_PRD_ProductionDeclaration]
+                            GROUP BY STID) PPD 
+                            ON PSD.ID = PPD.STID 
+                            /* FIXME: Quantity calculation (moltiplicazione per q.ta' pallet)*/
+                            OUTER APPLY
+                          	(
+                          		SELECT TOP 1
+                          			   t1.OHID,
+                          			   t1.OOID, 
+                          			   t1.STID,
+                          			   (t2.diScartiTrancia - t1.diScartiTrancia) Scrap,
+                          			   (t2.diPalletProdotti - t1.diPalletProdotti) * t2.diPzPallet Quantity
+                               	FROM [dbo].[MES_AGG_DataSupervisore] t1 
+                               		CROSS apply
+                                    (
+                                    	SELECT TOP 1 *
+                                        FROM [dbo].[MES_AGG_DataSupervisore]
+                                        WHERE OHID = t1.OHID
+                                        	  AND 
+                                        	  OOID = t1.OOID
+                                        	  AND
+                                        	  STID = t1.STID
+                                        ORDER BY Timestamp DESC) t2
+                               			WHERE 
+                               				t1.OHID = VOO.OHID
+                               				AND 
+                               				t1.OOID = VOO.OOID
+                               				AND
+                               				t1.STID = PPD.STID
+                               			ORDER BY t1.Timestamp ASC) SCT 
+                               			/* calculate scrap from the 'pressa'*/
+                               			OUTER APPLY
+                             				(
+                             					SELECT 
+                             						t1.OHID, 
+                             						t1.OOID, 
+                             						(t2.ZR_SUMCYC_JOB_BAD_I - t1.ZR_SUMCYC_JOB_BAD_I) ScrapBad, 
+                             						(t2.ZR_PROCYC_JOB_PS_I - t1.ZR_PROCYC_JOB_PS_I) ScrapPs, 
+                                                    (t2.ZR_PROCYC_JOB_OUT_I - t1.ZR_PROCYC_JOB_OUT_I) ScrapOut
+                               					FROM  
+                               					(
+                               						SELECT TOP 1 *
+                                      				FROM [dbo].[MES_AGG_DataPressa]
+                                      				WHERE 
+                                      					OHID = VOO.OHID
+                                      					AND 
+                                      					OOID = VOO.OOID
+                                      					AND
+                                      					STID = PPD.STID
+                                     				 ORDER BY Timestamp ASC
+                                     			 ) t1 
+                                     			 JOIN
+                                      			(
+                                 					SELECT TOP 1 *
+                                       				FROM [dbo].[MES_AGG_DataPressa]
+                                       				WHERE 
+                                       					OHID = VOO.OHID
+                                       					AND
+                                       					OOID = VOO.OOID
+                                       					AND
+                                       					STID = PPD.STID
+                                       				ORDER BY Timestamp DESC
+                                       			) t2 
+                                       			ON 
+                                       				t1.OHID = t2.OHID 
+                                       				AND 
+                                       				t1.OOID = t2.OOID
+                                       				AND t1.STID = t2.STID
+                                       		) SCP

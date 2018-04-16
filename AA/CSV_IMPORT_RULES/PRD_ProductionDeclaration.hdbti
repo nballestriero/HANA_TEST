@@ -1,0 +1,10 @@
+import = [ 
+	{ 
+		table = "HANA_TEST.AA.model::MES_PRD_ProductionDeclaration"; 
+		schema = "MES_LIGHT"; 
+		file = "HANA_TEST.AA.CSV:PRD_ProductionDeclaration.csv"; 
+		header = true; 
+		delimField = "|"; 
+ 
+	}
+];

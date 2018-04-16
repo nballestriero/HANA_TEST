@@ -1,0 +1,12 @@
+schema = "MES_LIGHT";
+query ="    
+	SELECT	TOP 1 *
+	FROM \"MES_LIGHT\".\"HANA_TEST.AA.model::MES_AGG_DataPressa\"
+	WHERE OHID = VOO.OHID
+		  AND 
+		  OOID = VOO.OOID
+		  AND
+		  STID = PPD.STID
+		  ORDER BY \"Timestamp\" DESC
+		  
+";
